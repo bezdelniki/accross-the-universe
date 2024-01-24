@@ -9,7 +9,7 @@ export class MenuScene extends Phaser.Scene {
     }
 
     preload() {
-        // Загрузка необходимых ресурсов, таких как изображения и шрифты
+        
     }
 
     create() {
@@ -17,16 +17,15 @@ export class MenuScene extends Phaser.Scene {
         const screenHeight = this.cameras.main.height;
 
         // Установка фона или другого изображения на сцену
-        this.background = this.add.image(0, 0, "background");
-        this.background.setOrigin(0, 0);
+        this.background = this.add.image(screenWidth / 2, screenHeight / 2, "background");
         this.background.setDisplaySize(screenWidth, screenHeight);
 
         // Создание заголовка
-        const title = this.add.text(this.cameras.main.width / 2, 100, "Заголовок", { fontSize: "48px", fontFamily: "Arial", color: "#ffffff" });
+        const title = this.add.text(this.cameras.main.width / 2, 100, "Accross The Universe", { fontSize: "64px", fontFamily: "dumbprofont", color: "#ffffff" });
         title.setOrigin(0.5);
 
         // Вычисление размеров кнопки в процентах от размера экрана
-        const buttonWidth = screenWidth * 0.2; // 20% от ширины экрана
+        const buttonWidth = screenWidth * 0.23; // 20% от ширины экрана
         const buttonHeight = buttonWidth; // 10% от высоты экрана
 
         // Добавление кнопки Play с иконкой и установка размеров
