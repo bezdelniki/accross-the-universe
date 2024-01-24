@@ -1,6 +1,6 @@
-import * as Phaser from "phaser"
+import * as Phaser from "phaser";
 // import { Collision, Composite, Composites } from "matter"
-import Spline from 'typescript-cubic-spline'
+import Spline from 'typescript-cubic-spline';
 
 function randomInt(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min
@@ -10,7 +10,7 @@ function max(a: number, b: number): number {
     return a >= b ? a : b
 }
 
-export class Game extends Phaser.Scene {
+export class GameScene extends Phaser.Scene {
 
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
 
@@ -40,7 +40,7 @@ export class Game extends Phaser.Scene {
     private fuelDecreaseRate: number = this.maxFuel / 30
 
     private fuel: number = this.maxFuel
-    private distance: number = 0 // m
+    private distance: number = 0
     private moneyCounter: number = 0
 
     private startPosX!: number
@@ -332,8 +332,7 @@ export class Game extends Phaser.Scene {
 
         this.fuelIndicator.setDisplaySize(this.fuel * this.fuelIndicator.width, this.fuelIndicator.height)
 
-        // Уменьшаем уровень топлива с учетом времени прошедшего с последнего обновления
-        this.fuel -= this.fuelDecreaseRate * (dt / 1000) // dt - разница времени в миллисекундах, делим на 1000, чтобы получить секунды
+        this.fuel -= this.fuelDecreaseRate * (dt / 1000)
 
         if (this.fuel < 0) {
             this.fuel = 0

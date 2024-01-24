@@ -1,7 +1,7 @@
-import * as Phaser from 'phaser'
+import * as Phaser from 'phaser';
 // import * as events from "events"
 
-export default class MainMenuScene extends Phaser.Scene
+export class MainMenuScene extends Phaser.Scene
 {
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
 
