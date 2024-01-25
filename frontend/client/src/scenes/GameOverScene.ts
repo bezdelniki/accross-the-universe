@@ -1,4 +1,13 @@
 import * as Phaser from "phaser";
+import { GameScene } from "./GameScene";
+
+
+interface GameOverData {
+    characterDead: boolean;
+    distance: number;
+    distanceRecord: number;
+    money: number;
+}
 
 
 export class GameOverScene extends Phaser.Scene {
@@ -11,14 +20,29 @@ export class GameOverScene extends Phaser.Scene {
     private distanceText!: Phaser.GameObjects.Text;
     private goldText!: Phaser.GameObjects.Text;
     private recordText!: Phaser.GameObjects.Text;
+
+    private money: number = 0;
+    private distance: number = 0;
+    private distanceRecord: number = this.distance;
+    private characterDead!: boolean;
+
+    private isRecord: boolean = false;
     
 
     constructor() {
         super("game-over");
     }
 
-    preload() {
-        
+    init(data: GameOverData) {
+        this.characterDead = data.characterDead;
+        this.distance = data.distance;
+        this.distanceRecord = data.distanceRecord;
+        this.money = data.money;
+
+        if (this.distance > this.distanceRecord) {
+            this.distanceRecord = this.distance;
+            this.isRecord = true;
+        }
     }
 
     create() {
@@ -43,25 +67,30 @@ export class GameOverScene extends Phaser.Scene {
         this.recordText = this.add.text(screenWidth / 5, screenHeight * 1.7 / 3, "Record: ", { fontSize: "36px", fontFamily: "dumbprofont", color: "#ffffff" });
         this.recordText.setOrigin(0.5);
 
+        this.updateDisplayedValues();
+
         const buttonSideSize = screenWidth * 0.13;
 
-        // если новый рекорд
-        this.newRecord = this.add.image(screenWidth * 3.7 / 5, screenHeight * 0.9 / 2, "new-record");
-        this.newRecord.setDisplaySize(screenWidth * 0.4, screenWidth * 0.4);
-        const glow = this.newRecord.preFX?.addShine()
+        if (this.isRecord) {
+            this.newRecord = this.add.image(screenWidth * 3.7 / 5, screenHeight * 0.9 / 2, "new-record");
+            this.newRecord.setDisplaySize(screenWidth * 0.4, screenWidth * 0.4);
+            const glow = this.newRecord.preFX?.addShine()
+        }
 
         this.restartBtn = this.add.image(screenWidth * 1.1 / 3, screenHeight * 3 / 4, "restart-btn");
         this.restartBtn.setDisplaySize(buttonSideSize, buttonSideSize);
         this.restartBtn.setInteractive({ useHandCursor: true });
         this.restartBtn.on("pointerdown", () => {
-            this.scene.start("game");
+            this.scene.add('game', GameScene, true);
+            this.scene.setVisible(false, 'game-over');
         });
-
+        
         this.mainManuBtn = this.add.image(screenWidth * 1.9 / 3, screenHeight * 3 / 4, "main-page-btn");
         this.mainManuBtn.setDisplaySize(buttonSideSize, buttonSideSize);
         this.mainManuBtn.setInteractive({ useHandCursor: true });
         this.mainManuBtn.on("pointerdown", () => {
-            this.scene.start("menu");
+            this.scene.start('menu');
+            this.scene.setVisible(false, 'game-over');
         });
     }
 
@@ -76,14 +105,28 @@ export class GameOverScene extends Phaser.Scene {
 
         const buttonSideSize = screenWidth * 0.13;
 
-        this.newRecord.setPosition(screenWidth * 3.7 / 5, screenHeight * 0.9 / 2);
-        this.newRecord.setDisplaySize(screenWidth * 0.4, screenWidth * 0.4);
-        const glow = this.newRecord.preFX?.addShine()
+        if (this.isRecord) {
+            this.newRecord.setPosition(screenWidth * 3.7 / 5, screenHeight * 0.9 / 2);
+            this.newRecord.setDisplaySize(screenWidth * 0.4, screenWidth * 0.4);
+            const glow = this.newRecord.preFX?.addShine()
+        }
 
         this.restartBtn.setPosition(screenWidth * 1.1 / 3, screenHeight * 3 / 4);
         this.restartBtn.setDisplaySize(buttonSideSize, buttonSideSize);        
 
         this.mainManuBtn.setPosition(screenWidth * 1.9 / 3, screenHeight * 3 / 4);
         this.mainManuBtn.setDisplaySize(buttonSideSize, buttonSideSize);
+    }
+
+    updateDisplayedValues() {
+        this.deathText.setText(this.characterDead ? `DRIVER IS DEAD` : `OUT OF FUEL`);
+        this.distanceText.setText(`Distance: ${this.distance}m`);
+        this.recordText.setText(`Record: ${this.distanceRecord}m`);
+        this.goldText.setText(`Gold: ${this.money}g`);
+    }
+
+    sendData(): void {
+        const money = this.money;
+        const distanceRecord = this.distanceRecord;
     }
 }

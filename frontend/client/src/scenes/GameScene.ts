@@ -70,6 +70,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     create(): void {
+        // this.scene.restart();
         // this.esc = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.ESC)
 
         this.width = this.scale.width
@@ -613,7 +614,8 @@ export class GameScene extends Phaser.Scene {
         const distance = this.distance;
         const distanceRecord = this.distanceRecord;
         const money = this.moneyCounter;
-
-        this.scene.start('game-over', { characterDead, distance, distanceRecord, money });
+        
+        this.scene.start('game-over', { characterDead: characterDead, distance: distance, distanceRecord: distanceRecord, money: money });
+        this.scene.remove('game');
     }
 }

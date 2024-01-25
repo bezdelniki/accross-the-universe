@@ -1,5 +1,7 @@
 import { use } from "matter";
 import * as Phaser from "phaser";
+import { GameScene } from "./GameScene";
+
 
 export class MenuScene extends Phaser.Scene {
     private playButton!: Phaser.GameObjects.Image;
@@ -16,6 +18,7 @@ export class MenuScene extends Phaser.Scene {
     }
 
     create() {
+        console.log("create menu scene");
         const screenWidth = this.cameras.main.width;
         const screenHeight = this.cameras.main.height;
 
@@ -34,7 +37,8 @@ export class MenuScene extends Phaser.Scene {
         this.playButton.setDisplaySize(buttonWidth, buttonHeight);
         this.playButton.setInteractive({ useHandCursor: true });
         this.playButton.on("pointerdown", () => {
-            this.scene.start("game");
+            this.scene.add('game', GameScene, true);
+            this.scene.setVisible(false, 'menu');
         });
 
         this.leaderboardBox = this.add.image(screenWidth * 0.02, this.cameras.main.centerY, 'leaderboard-frame');
@@ -75,5 +79,21 @@ export class MenuScene extends Phaser.Scene {
         const userBoxHeight = screenHeight * 0.5;
         const userBoxWidth = userBoxHeight ;
         this.userBox.setDisplaySize(userBoxWidth, userBoxHeight);
+    }
+
+    updateData(): void {
+        const token = sessionStorage.getItem('token');
+
+        // send request for data to server
+        // requested data:
+        //               username
+        //               money
+        //               distanceRecord
+
+        this.updateLeaderboard();
+    }
+
+    updateLeaderboard(): void {
+
     }
 }

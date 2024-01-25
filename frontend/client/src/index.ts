@@ -23,7 +23,7 @@ const config: Phaser.Types.Core.GameConfig = {
             }
         }
     },
-    scene: [PreloadScene, MenuScene, GameScene, GameOverScene]
+    scene: [PreloadScene, MenuScene, GameOverScene]
 }
 
 const game: Phaser.Game = new Phaser.Game(config)
