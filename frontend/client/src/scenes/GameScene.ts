@@ -473,11 +473,18 @@ export class GameScene extends Phaser.Scene {
                 fuelIndex = i
             }
         }
+
+        function getRandomCoinValue() {
+            const numbers = [5, 25, 100, 500];
+            const randomIndex = randomInt(0, numbers.length - 1);
+            return numbers[randomIndex];
+        }
         
         if (this.lastGenerationEndX < xEnd) {
             for (let i = 0; i < coinsCount; i++) {
                 const point = this.surfacePoints[coinsIndices[i]]
-                this.addCoin(point.x, point.y - yOffset, 500)
+                const coinValue = getRandomCoinValue();
+                this.addCoin(point.x, point.y - yOffset, coinValue)
             }
 
             if (fuelIndex != -1) {

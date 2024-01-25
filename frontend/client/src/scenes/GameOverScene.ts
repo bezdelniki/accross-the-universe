@@ -119,7 +119,7 @@ export class GameOverScene extends Phaser.Scene {
     }
 
     updateDisplayedValues() {
-        this.deathText.setText(this.characterDead ? `DRIVER IS DEAD` : `OUT OF FUEL`);
+        this.deathText.setText(this.characterDead ? `DRIVER IS DEAD` : `RAN OUT OF FUEL`);
         this.distanceText.setText(`Distance: ${this.distance}m`);
         this.recordText.setText(`Record: ${this.distanceRecord}m`);
         this.goldText.setText(`Gold: ${this.money}g`);
@@ -128,5 +128,7 @@ export class GameOverScene extends Phaser.Scene {
     sendData(): void {
         const money = this.money;
         const distanceRecord = this.distanceRecord;
+
+        // data post
     }
 }

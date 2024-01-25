@@ -2,3 +2,23 @@
     font-family: 'dumbprofont';
     src: url('assets/fonts/3DumbPro03.ttf') format('truetype');
 }
+
+@font-face {
+    font-family: 'jumperfont';
+    src: url('assets/fonts/Jumper.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'chinrgfont';
+    src: url('assets/fonts/chinrg.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'westcoastfont';
+    src: url('assets/fonts/Westcoast.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'aidafont';
+    src: url('assets/fonts/AidaGarmoAida.ttf') format('truetype');
+}

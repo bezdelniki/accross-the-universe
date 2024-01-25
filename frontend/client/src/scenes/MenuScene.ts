@@ -9,12 +9,18 @@ export class MenuScene extends Phaser.Scene {
     private userBox!: Phaser.GameObjects.Image;
     private leaderboardBox!: Phaser.GameObjects.Image;
 
+    private username!: string;
+    private money: number = 0;
+    private distanceRecord: number = 0;
+
+    private usernameText!: Phaser.GameObjects.Text;
+    private distanceRecordText!: Phaser.GameObjects.Text;
+    private moneyText!: Phaser.GameObjects.Text;
+
+    private leaderboardTitle!: Phaser.GameObjects.Text;
+
     constructor() {
         super("menu");
-    }
-
-    preload() {
-        
     }
 
     create() {
@@ -30,7 +36,7 @@ export class MenuScene extends Phaser.Scene {
         const title = this.add.text(screenWidth / 2, screenHeight * 0.15, "Accross The Universe", { fontSize: "64px", fontFamily: "dumbprofont", color: "#ffffff" });
         title.setOrigin(0.5);
 
-        const buttonWidth = screenWidth * 0.23;
+        const buttonWidth = screenWidth * 0.14;
         const buttonHeight = buttonWidth;
 
         this.playButton = this.add.image(screenWidth / 2, screenHeight / 2, "play-btn");
@@ -49,24 +55,55 @@ export class MenuScene extends Phaser.Scene {
         this.leaderboardBox.setDisplaySize(leaderboardBoxWidth, leaderboardBoxHeight);
         this.leaderboardBox.setPosition(screenWidth - leaderboardBoxWidth, this.cameras.main.centerY * 1.2);
 
-        
+
         this.userBox = this.add.image(0, this.cameras.main.centerY, 'user-frame');
         this.userBox.setOrigin(0, 0.5);
-        
+
         const userBoxHeight = screenHeight * 0.5;
-        const userBoxWidth = userBoxHeight ;
+        const userBoxWidth = userBoxHeight;
         this.userBox.setDisplaySize(userBoxWidth, userBoxHeight);
+
+        this.usernameText = this.add.text(0, 0, "username", { fontSize: "32px", fontFamily: "aidafont", color: "#ffffff" });
+        this.moneyText = this.add.text(0, 0, "123456g", { fontSize: "24px", fontFamily: "aidafont", color: "#ffffff" })
+        this.distanceRecordText = this.add.text(0, 0, "1234m", { fontSize: "24px", fontFamily: "aidafont", color: "#ffffff" });
+
+        const userBoxCenterX = this.userBox.displayWidth * 0.5;
+        const userBoxTopTextY = this.userBox.y - this.userBox.displayHeight * 0.25;
+
+        this.usernameText.setPosition(userBoxCenterX, userBoxTopTextY);
+        this.usernameText.setOrigin(0.5, 0);
+        
+        this.distanceRecordText.setPosition(userBoxCenterX, userBoxTopTextY + this.userBox.displayHeight * 0.2);
+        this.distanceRecordText.setOrigin(0.5, 0);
+       
+        this.moneyText.setPosition(userBoxCenterX, userBoxTopTextY + this.userBox.displayHeight * 0.4);
+        this.moneyText.setOrigin(0.5, 0);
+
+        
+        // штука для авторизации
+
+        this.leaderboardTitle = this.add.text(0, 0, "LEADERBOARD ", { fontSize: "36px", fontFamily: "aidafont", color: "#ffffff" });
+
+        const leaderboardBoxCenterX = screenWidth - this.leaderboardBox.displayWidth * 0.55;
+        const leaderboardBoxTopY = this.leaderboardBox.y - this.leaderboardBox.displayHeight * 0.56;
+
+        this.leaderboardTitle.setPosition(leaderboardBoxCenterX, leaderboardBoxTopY);
+        this.leaderboardTitle.setOrigin(0.5, 0);
+        // this.leaderboardBox.displayWidth = this.leaderboardBox.displayWidth;
+
+        this.updateData();
+        this.updateDisplayedValues();
     }
 
     update() {
-        
+
     }
 
     updateSize(screenWidth: number, screenHeight: number) {
         this.background.setPosition(screenWidth / 2, screenHeight / 2);
         this.background.setDisplaySize(screenWidth, screenHeight);
 
-        const buttonWidth = screenWidth * 0.23;
+        const buttonWidth = screenWidth * 0.14;
         const buttonHeight = buttonWidth;
         this.playButton.setDisplaySize(buttonWidth, buttonHeight);
         this.playButton.setPosition(screenWidth / 2, screenHeight / 2);
@@ -77,23 +114,71 @@ export class MenuScene extends Phaser.Scene {
         this.leaderboardBox.setPosition(screenWidth - leaderboardBoxWidth, this.cameras.main.centerY * 1.2);
 
         const userBoxHeight = screenHeight * 0.5;
-        const userBoxWidth = userBoxHeight ;
+        const userBoxWidth = userBoxHeight;
         this.userBox.setDisplaySize(userBoxWidth, userBoxHeight);
+
+        const userBoxCenterX = this.userBox.displayWidth * 0.5;
+        const userBoxTopTextY = this.userBox.y - this.userBox.displayHeight * 0.25;
+
+        this.usernameText.setPosition(userBoxCenterX, userBoxTopTextY);
+        
+        this.distanceRecordText.setPosition(userBoxCenterX, userBoxTopTextY + this.userBox.displayHeight * 0.2);
+       
+        this.moneyText.setPosition(userBoxCenterX, userBoxTopTextY + this.userBox.displayHeight * 0.4);
+
+        const leaderboardBoxCenterX = screenWidth - this.leaderboardBox.displayWidth * 0.55;
+        const leaderboardBoxTopY = this.leaderboardBox.y - this.leaderboardBox.displayHeight * 0.56;
+
+        this.leaderboardTitle.setPosition(leaderboardBoxCenterX, leaderboardBoxTopY);
+    }
+
+    updateDisplayedValues(): void {
+        this.usernameText.setText(`${this.username}`);
+        this.distanceRecordText.setText(`${this.distanceRecord}m`)
+        this.moneyText.setText(`${this.money}g`);
+
     }
 
     updateData(): void {
+        this.updateUserData();
+        this.updateLeaderboard();
+    }
+
+    updateUserData(): void {
         const token = sessionStorage.getItem('token');
 
         // send request for data to server
         // requested data:
-        //               username
-        //               money
-        //               distanceRecord
-
-        this.updateLeaderboard();
+        //      username
+        //      money
+        //      distanceRecord
+        this.username = "some-user";
+        this.distanceRecord = 12345;
+        this.money = 1234567;
     }
 
     updateLeaderboard(): void {
-
+        const exampleData = [
+            ['CoffeeAddict', 99432],
+            ['CoolGamer', 98765],
+            ['Bookworm', 90123],
+            ['Traveler', 82933],
+            ['User123', 54321],
+            ['SportsFan', 43428],
+            ['AnimalLover', 23478],
+            ['Dreamer', 23456],
+            ['MovieBuff', 23442],
+            ['NinjaMaster', 12345],
+            ['ArtisticSoul', 9876],
+            ['AdventureSeeker', 7890],
+            ['TechGeek', 7354],
+            ['NatureLover', 6789],
+            ['TechWizard', 6247],
+            ['RhythmJunkie', 2348],
+            ['Foodie', 1000],
+            ['MusicLover', 200],
+            ['CodeNinja', 123],
+            ['FitnessEnthusiast', 34]
+          ];
     }
 }
