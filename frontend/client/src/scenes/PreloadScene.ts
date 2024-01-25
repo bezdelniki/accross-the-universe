@@ -19,11 +19,16 @@ export class PreloadScene extends Phaser.Scene {
         this.load.image('play-btn', 'assets/images/menu/play-btn.svg')
         this.load.image('background', 'assets/images/menu/background.jpg')
 
+        this.load.image('restart-btn', 'assets/images/menu/restart.png')
+        this.load.image('main-page-btn', 'assets/images/menu/main-page.png')
+        this.load.image('black-screen', 'assets/images/menu/black-screen.png')
+        this.load.image('new-record', 'assets/images/menu/new-record.png')
+
         // this.load.font('dumbprofont', 'assets/fonts/3DumbPro03.ttf');
     }
 
     create() {
-        this.scene.start('menu')
+        this.scene.start('game-over')
     }
 
 }
