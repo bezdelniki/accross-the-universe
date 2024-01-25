@@ -30,7 +30,7 @@ export class PreloadScene extends Phaser.Scene {
     }
 
     create() {
-        this.scene.start('game-over')
+        this.scene.start('menu')
     }
 
 }

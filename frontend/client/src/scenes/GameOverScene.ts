@@ -7,6 +7,12 @@ export class GameOverScene extends Phaser.Scene {
     private mainManuBtn!: Phaser.GameObjects.Image;
     private newRecord!: Phaser.GameObjects.Image;
 
+    private deathText!: Phaser.GameObjects.Text;
+    private distanceText!: Phaser.GameObjects.Text;
+    private goldText!: Phaser.GameObjects.Text;
+    private recordText!: Phaser.GameObjects.Text;
+    
+
     constructor() {
         super("game-over");
     }
@@ -24,22 +30,23 @@ export class GameOverScene extends Phaser.Scene {
         this.blackScreen.setDisplaySize(screenWidth, screenHeight);
 
         // текст об окоынчании игры
-        const deathText = this.add.text(this.cameras.main.width / 2, 100, "DRIVER IS DEAD", { fontSize: "64px", fontFamily: "dumbprofont", color: "#ffffff" });
-        deathText.setOrigin(0.5);
+        this.deathText = this.add.text(screenWidth / 2, 100, "DRIVER IS DEAD", { fontSize: "64px", fontFamily: "dumbprofont", color: "#ffffff" });
+        this.deathText.setOrigin(0.5);
 
         // показатели в игре
-        const distance = this.add.text(this.cameras.main.width / 5, screenHeight * 1.1 / 3, "Distance: ", { fontSize: "36px", fontFamily: "dumbprofont", color: "#ffffff" });
-        distance.setOrigin(0.5);
-        const gold = this.add.text(this.cameras.main.width / 5, screenHeight * 1.4 / 3, "Gold: ", { fontSize: "36px", fontFamily: "dumbprofont", color: "#ffffff" });
-        gold.setOrigin(0.5);
-        const record = this.add.text(this.cameras.main.width / 5, screenHeight * 1.7 / 3, "Record: ", { fontSize: "36px", fontFamily: "dumbprofont", color: "#ffffff" });
-        record.setOrigin(0.5);
+        this.distanceText = this.add.text(screenWidth / 5, screenHeight * 1.1 / 3, "Distance: ", { fontSize: "36px", fontFamily: "dumbprofont", color: "#ffffff" });
+        this.distanceText.setOrigin(0.5);
 
-        // вычисление пропорций кнопок
+        this.goldText = this.add.text(screenWidth / 5, screenHeight * 1.4 / 3, "Gold: ", { fontSize: "36px", fontFamily: "dumbprofont", color: "#ffffff" });
+        this.goldText.setOrigin(0.5);
+
+        this.recordText = this.add.text(screenWidth / 5, screenHeight * 1.7 / 3, "Record: ", { fontSize: "36px", fontFamily: "dumbprofont", color: "#ffffff" });
+        this.recordText.setOrigin(0.5);
+
         const buttonSideSize = screenWidth * 0.13;
 
         // если новый рекорд
-        this.newRecord = this.add.image(this.cameras.main.width * 3.7 / 5, screenHeight * 0.9 / 2, "new-record");
+        this.newRecord = this.add.image(screenWidth * 3.7 / 5, screenHeight * 0.9 / 2, "new-record");
         this.newRecord.setDisplaySize(screenWidth * 0.4, screenWidth * 0.4);
         const glow = this.newRecord.preFX?.addShine()
 
@@ -58,7 +65,25 @@ export class GameOverScene extends Phaser.Scene {
         });
     }
 
-    update() {
-        
+    updateSize(screenWidth: number, screenHeight: number): void {
+        this.blackScreen.setPosition(screenWidth / 2, screenHeight / 2);
+        this.blackScreen.setDisplaySize(screenWidth, screenHeight);
+    
+        this.deathText.setPosition(screenWidth / 2, 100);
+        this.distanceText.setPosition(screenWidth / 5, screenHeight * 1.1 / 3);
+        this.goldText.setPosition(screenWidth / 5, screenHeight * 1.4 / 3);
+        this.recordText.setPosition(screenWidth / 5, screenHeight * 1.7 / 3);
+
+        const buttonSideSize = screenWidth * 0.13;
+
+        this.newRecord.setPosition(screenWidth * 3.7 / 5, screenHeight * 0.9 / 2);
+        this.newRecord.setDisplaySize(screenWidth * 0.4, screenWidth * 0.4);
+        const glow = this.newRecord.preFX?.addShine()
+
+        this.restartBtn.setPosition(screenWidth * 1.1 / 3, screenHeight * 3 / 4);
+        this.restartBtn.setDisplaySize(buttonSideSize, buttonSideSize);        
+
+        this.mainManuBtn.setPosition(screenWidth * 1.9 / 3, screenHeight * 3 / 4);
+        this.mainManuBtn.setDisplaySize(buttonSideSize, buttonSideSize);
     }
 }

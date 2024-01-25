@@ -27,11 +27,9 @@ export class MenuScene extends Phaser.Scene {
         const title = this.add.text(screenWidth / 2, screenHeight * 0.15, "Accross The Universe", { fontSize: "64px", fontFamily: "dumbprofont", color: "#ffffff" });
         title.setOrigin(0.5);
 
-        // Вычисление размеров кнопки в процентах от размера экрана
-        const buttonWidth = screenWidth * 0.23; // 20% от ширины экрана
-        const buttonHeight = buttonWidth; // 10% от высоты экрана
+        const buttonWidth = screenWidth * 0.23;
+        const buttonHeight = buttonWidth;
 
-        // Добавление кнопки Play с иконкой и установка размеров
         this.playButton = this.add.image(screenWidth / 2, screenHeight / 2, "play-btn");
         this.playButton.setDisplaySize(buttonWidth, buttonHeight);
         this.playButton.setInteractive({ useHandCursor: true });
@@ -39,7 +37,6 @@ export class MenuScene extends Phaser.Scene {
             this.scene.start("game");
         });
 
-        // leaderboardBox
         this.leaderboardBox = this.add.image(screenWidth * 0.02, this.cameras.main.centerY, 'leaderboard-frame');
         this.leaderboardBox.setOrigin(0, 0.5);
 
@@ -48,51 +45,35 @@ export class MenuScene extends Phaser.Scene {
         this.leaderboardBox.setDisplaySize(leaderboardBoxWidth, leaderboardBoxHeight);
         this.leaderboardBox.setPosition(screenWidth - leaderboardBoxWidth, this.cameras.main.centerY * 1.2);
 
-        // userBox
-        const userBoxHeight = screenHeight * 0.5;
-        const userBoxWidth = userBoxHeight ;
-
+        
         this.userBox = this.add.image(0, this.cameras.main.centerY, 'user-frame');
         this.userBox.setOrigin(0, 0.5);
-
+        
+        const userBoxHeight = screenHeight * 0.5;
+        const userBoxWidth = userBoxHeight ;
         this.userBox.setDisplaySize(userBoxWidth, userBoxHeight);
-
-
-        // // Создание кнопки Play
-        // const playButton = this.add.text(this.cameras.main.width / 2, 200, "Play", { fontSize: "24px", fontFamily: "Arial", color: "#ffffff", backgroundColor: "#000000" });
-        // playButton.setOrigin(0.5);
-        // playButton.setInteractive({ useHandCursor: true });
-        // playButton.on("pointerdown", () => {
-        //     this.scene.start("game");
-        // });
-
-        // // Создание бокса с юзернеймом и результатами
-        // const userBox = this.add.graphics();
-        // userBox.fillStyle(0xffffff, 0.8);
-        // userBox.fillRect(this.cameras.main.width / 4, this.cameras.main.height / 2, 200, 100);
-
-        // const usernameText = this.add.text(this.cameras.main.width / 4 + 10, this.cameras.main.height / 2 + 10, "Username", { fontSize: "16px", fontFamily: "Arial", color: "#000000" });
-        // const coinsText = this.add.text(this.cameras.main.width / 4 + 10, this.cameras.main.height / 2 + 40, "Coins: 0", { fontSize: "16px", fontFamily: "Arial", color: "#000000" });
-        // const highscoreText = this.add.text(this.cameras.main.width / 4 + 10, this.cameras.main.height / 2 + 70, "Highscore: 0", { fontSize: "16px", fontFamily: "Arial", color: "#000000" });
-
-        // // Создание бокса для лидерборда
-        // const leaderboardBox = this.add.graphics();
-        // leaderboardBox.fillStyle(0xffffff, 0.8);
-        // leaderboardBox.fillRect(this.cameras.main.width * 3 / 4, this.cameras.main.height / 2, 200, 300);
-
-        // const leaderboardTitle = this.add.text(this.cameras.main.width * 3 / 4 + 100, this.cameras.main.height / 2 + 10, "Leaderboard", { fontSize: "16px", fontFamily: "Arial", color: "#000000" });
-        // leaderboardTitle.setOrigin(0.5);
-
-        // // Загрузка и отображение списка игроков
-        // const players = ["Player 1", "Player 2", "Player 3"]; // Пример списка игроков
-        // const leaderboardTexts = [];
-        // for (let i = 0; i < players.length; i++) {
-        //     const playerText = this.add.text(this.cameras.main.width * 3 / 4 + 10, this.cameras.main.height / 2 + 40 + i * 30, `${i + 1}. ${players[i]}`, { fontSize: "14px", fontFamily: "Arial", color: "#000000" });
-        //     leaderboardTexts.push(playerText);
-        // }
     }
 
     update() {
-        // Логика обновления сцены
+        
+    }
+
+    updateSize(screenWidth: number, screenHeight: number) {
+        this.background.setPosition(screenWidth / 2, screenHeight / 2);
+        this.background.setDisplaySize(screenWidth, screenHeight);
+
+        const buttonWidth = screenWidth * 0.23;
+        const buttonHeight = buttonWidth;
+        this.playButton.setDisplaySize(buttonWidth, buttonHeight);
+        this.playButton.setPosition(screenWidth / 2, screenHeight / 2);
+
+        const leaderboardBoxHeight = screenHeight * 0.7;
+        const leaderboardBoxWidth = leaderboardBoxHeight / 1.4;
+        this.leaderboardBox.setDisplaySize(leaderboardBoxWidth, leaderboardBoxHeight);
+        this.leaderboardBox.setPosition(screenWidth - leaderboardBoxWidth, this.cameras.main.centerY * 1.2);
+
+        const userBoxHeight = screenHeight * 0.5;
+        const userBoxWidth = userBoxHeight ;
+        this.userBox.setDisplaySize(userBoxWidth, userBoxHeight);
     }
 }

@@ -1,5 +1,4 @@
 import * as Phaser from "phaser";
-// import { Collision, Composite, Composites } from "matter"
 import Spline from 'typescript-cubic-spline';
 
 function randomInt(min: number, max: number) {
@@ -19,7 +18,6 @@ export class GameScene extends Phaser.Scene {
     private car!: Phaser.Physics.Matter.Sprite
     private wheel1!: Phaser.Physics.Matter.Sprite
     private wheel2!: Phaser.Physics.Matter.Sprite
-    // private items: Phaser.Physics.Matter.Sprite[] = []
 
     private characterBody!: Phaser.Physics.Matter.Sprite
     private characterHead!: Phaser.Physics.Matter.Sprite
@@ -40,6 +38,7 @@ export class GameScene extends Phaser.Scene {
     private fuelDecreaseRate: number = this.maxFuel / 30
 
     private fuel: number = this.maxFuel
+    private distanceRecord: number = 0
     private distance: number = 0
     private moneyCounter: number = 0
 
@@ -60,7 +59,7 @@ export class GameScene extends Phaser.Scene {
 
     private items: Phaser.Physics.Matter.Sprite[] = []
 
-    private esc!: any
+    // private esc!: any
 
     init() {
         this.cursors = this.input.keyboard?.createCursorKeys() as Phaser.Types.Input.Keyboard.CursorKeys
@@ -70,8 +69,8 @@ export class GameScene extends Phaser.Scene {
         super('game')
     }
 
-    create() {
-        this.esc = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.ESC)
+    create(): void {
+        // this.esc = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.ESC)
 
         this.width = this.scale.width
         this.height = this.scale.height
@@ -97,7 +96,6 @@ export class GameScene extends Phaser.Scene {
                 const { bodyA, bodyB } = pair
 
                 if (bodyA.gameObject === this.characterHead && (bodyB.gameObject != this.car && bodyB.gameObject != this.characterBody)) {
-                    // добавить условие на предметы
                     let collidedWithItem: boolean = false
                     this.items.forEach(item => {
                         if (bodyA.gameObject === this.characterHead && (bodyB.gameObject == item)) {
@@ -107,7 +105,6 @@ export class GameScene extends Phaser.Scene {
 
                     if (!collidedWithItem) {
                         this.characterDead = true
-                        // console.log("player dead")
                     }
                 }
             })
@@ -116,9 +113,6 @@ export class GameScene extends Phaser.Scene {
         this.car = this.matter.add.sprite(this.startPosX, this.startPosY, 'car', undefined, { shape: this.shapes.carBody })
         this.wheel1 = this.matter.add.sprite(this.startPosX, this.startPosY, 'wheel', undefined, { shape: this.shapes.carWheel })
         this.wheel2 = this.matter.add.sprite(this.startPosX, this.startPosY, 'wheel', undefined, { shape: this.shapes.carWheel })
-
-        // this.characterHead.setDisplaySize(50 * 1.079646, 50)
-        // this.characterBody.setDisplaySize(40 * 1.71428, 40)
 
         this.characterHead.setMass(1)
         this.characterBody.setMass(1)
@@ -271,19 +265,16 @@ export class GameScene extends Phaser.Scene {
             }
         )
 
-        // камера 
         this.cameras.main.startFollow(this.car)
-        this.cameras.main.setFollowOffset(-175, 100) // Фиксация горизонтального положения, смещение по вертикали
-        this.cameras.main.setDeadzone(0, 0) // Зона смягчения, в которой объект может перемещаться без активации камеры
-        this.cameras.main.setLerp(1, 1) // Настройка скорости следования камеры
+        this.cameras.main.setFollowOffset(-175, 100) 
+        this.cameras.main.setDeadzone(0, 0) 
+        this.cameras.main.setLerp(1, 1) 
 
-        // коллизиции
         this.wheel1.setCollisionCategory(1)
         this.wheel2.setCollisionCategory(1)
         this.wheel1.setCollisionGroup(1)
         this.wheel2.setCollisionGroup(1)
 
-        // индикаторы
         this.distance = 0
         this.distanceIndicator = this.add.text(10, 10, "", { fontFamily: "Arial", fontSize: 28, color: "#ffffff" })
 
@@ -298,7 +289,7 @@ export class GameScene extends Phaser.Scene {
         this.moneyIcon.setOrigin(0, 0)
     }
 
-    update(t: number, dt: number) {
+    update(t: number, dt: number): void {
         this.updateGameState()
 
         const speed = this.carSpeed
@@ -344,14 +335,15 @@ export class GameScene extends Phaser.Scene {
         this.characterBody.setRotation(Math.PI / 2 + this.car.rotation)
     }
 
-    updateGameState() {
+    updateGameState(): void {
         if ((this.characterDead || this.fuel === 0) && !this.gameEnd) {
             this.gameEnd = true
             console.log("game end.")
+            this.gameOver();
         }
     }
 
-    updateDistance() {
+    updateDistance(): void {
         const oneMetre = 125
 
         let currentDistance = Math.floor((this.car.x - this.startPosX) / oneMetre)
@@ -364,7 +356,7 @@ export class GameScene extends Phaser.Scene {
         this.moneyIndicator.setText(this.moneyCounter.toString())
     }
 
-    updateIndicatorsPositions() {
+    updateIndicatorsPositions(): void {
         this.distanceIndicator.setScrollFactor(0, 0)
         this.fuelIndicator.setScrollFactor(0, 0)
         this.moneyIndicator.setScrollFactor(0, 0)
@@ -373,7 +365,7 @@ export class GameScene extends Phaser.Scene {
         this.moneyIcon.setPosition(max(this.moneyCounter.toString().length * 20, 40), this.moneyIcon.y)
     }
 
-    updateBackWallPosition() {
+    updateBackWallPosition(): void {
         const backWallOffset = 400
         const newX = this.car.x - this.startPosX - backWallOffset
         const newY = this.car.y
@@ -384,36 +376,6 @@ export class GameScene extends Phaser.Scene {
 
         this.backWall.y = newY
     }
-
-    // generateSurfacePoints(xStart: number, yStart: number, xStep: number, pointNumber: number, yMin: number, yMax: number, splineStep: number = 5) {
-    //     function randomInt(min: number, max: number) {
-    //         return Math.floor(Math.random() * (max - min + 1)) + min
-    //     }
-
-    //     let xArr: number[] = []
-    //     let yArr: number[] = []
-
-    //     for (let i = 0; i < pointNumber; i++) {
-    //         xArr.push(xStart + xStep * i)
-    //         yArr.push(randomInt(yMin, yMax))
-    //     }
-
-    //     const spline = new Spline(xArr, yArr)
-
-    //     let pointsTmp: number[][] = []
-    //     for (let x = xStart; x <= xStart + xStep * (pointNumber - 1); x += splineStep) {
-    //         pointsTmp.push([x, spline.at(x)])
-    //     }
-
-    //     let points: Phaser.Math.Vector2[] = pointsTmp.flatMap(([x, y]) => new Phaser.Math.Vector2(x, y));
-
-    //     let result: Phaser.Math.Vector2[] = []
-    //     for (let i = 0; i < points.length; i++) {
-    //         result.push(new Phaser.Math.Vector2(points[i].x, this.height - points[i].y))
-    //     }
-
-    //     return result
-    // }
 
     generateSurfacePoints(xStep: number, pointNumber: number, yMin: number, yMax: number, splineStep: number = 5) {
         let xArr: number[] = [];
@@ -456,7 +418,7 @@ export class GameScene extends Phaser.Scene {
         return result
     }
 
-    generateSurface() {
+    generateSurface(): void {
         if (this.generatedDistance < this.car.x + this.width) {
             const xStart: number = this.generatedDistance
             // console.log(xStart)
@@ -478,7 +440,7 @@ export class GameScene extends Phaser.Scene {
         }
     }
 
-    generateItems() {
+    generateItems(): void {
         const pointsCount = this.surfacePoints.length
         const xEnd = this.surfacePoints[pointsCount - 1].x
 
@@ -526,13 +488,13 @@ export class GameScene extends Phaser.Scene {
         }
     }
 
-    generateMap() {
+    generateMap(): void {
         this.generateSurface()
 
         this.generateItems()
     }
 
-    addLine(startPoint: Phaser.Math.Vector2, endPoint: Phaser.Math.Vector2) {
+    addLine(startPoint: Phaser.Math.Vector2, endPoint: Phaser.Math.Vector2): void {
         const massCenterX = startPoint.x;
         const massCenterY = startPoint.y;
 
@@ -551,7 +513,7 @@ export class GameScene extends Phaser.Scene {
         graphics.lineBetween(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
     }
 
-    addItem(x: number = 0, y: number = 0, type: string, size: number) {
+    addItem(x: number = 0, y: number = 0, type: string, size: number): void {
         let itemShape
 
         const baseType = type.includes("coin") ? "coin" : type
@@ -617,17 +579,17 @@ export class GameScene extends Phaser.Scene {
         this.items.push(newItem)
     }
 
-    addCoin(x: number, y: number, value: number) {
+    addCoin(x: number, y: number, value: number): void {
         const coinSize = 70
         this.addItem(x, y, "coin" + value.toString(), coinSize)
     }
 
-    addFuel(x: number, y: number) {
+    addFuel(x: number, y: number): void {
         const fuelSize = 70
         this.addItem(x, y, "fuel", fuelSize)
     }
 
-    removeMapPart() {
+    removeMapPart(): void {
         const offset = this.width
 
         // this.mapObjects.array.forEach(object => {
@@ -638,4 +600,20 @@ export class GameScene extends Phaser.Scene {
         // });
     }
 
+    gameOver(): void {
+        setTimeout(() => {
+            if (this.gameEnd) {
+                this.quitGame();
+            }
+        }, 2000);
+    }
+
+    quitGame(): void {
+        const characterDead = this.characterDead;
+        const distance = this.distance;
+        const distanceRecord = this.distanceRecord;
+        const money = this.moneyCounter;
+
+        this.scene.start('game-over', { characterDead, distance, distanceRecord, money });
+    }
 }
