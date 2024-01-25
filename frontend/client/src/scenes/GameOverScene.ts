@@ -1,0 +1,64 @@
+import * as Phaser from "phaser";
+
+
+export class GameOverScene extends Phaser.Scene {
+    private blackScreen!: Phaser.GameObjects.Image;
+    private restartBtn!: Phaser.GameObjects.Image;
+    private mainManuBtn!: Phaser.GameObjects.Image;
+    private newRecord!: Phaser.GameObjects.Image;
+
+    constructor() {
+        super("game-over");
+    }
+
+    preload() {
+        
+    }
+
+    create() {
+        const screenWidth = this.cameras.main.width;
+        const screenHeight = this.cameras.main.height;
+
+        // установка черного прозрачного фона
+        this.blackScreen = this.add.image(screenWidth / 2, screenHeight / 2, 'black-screen');
+        this.blackScreen.setDisplaySize(screenWidth, screenHeight);
+
+        // текст об окоынчании игры
+        const deathText = this.add.text(this.cameras.main.width / 2, 100, "DRIVER IS DEAD", { fontSize: "64px", fontFamily: "dumbprofont", color: "#ffffff" });
+        deathText.setOrigin(0.5);
+
+        // показатели в игре
+        const distance = this.add.text(this.cameras.main.width / 5, screenHeight * 1.1 / 3, "Distance: ", { fontSize: "36px", fontFamily: "dumbprofont", color: "#ffffff" });
+        distance.setOrigin(0.5);
+        const gold = this.add.text(this.cameras.main.width / 5, screenHeight * 1.4 / 3, "Gold: ", { fontSize: "36px", fontFamily: "dumbprofont", color: "#ffffff" });
+        gold.setOrigin(0.5);
+        const record = this.add.text(this.cameras.main.width / 5, screenHeight * 1.7 / 3, "Record: ", { fontSize: "36px", fontFamily: "dumbprofont", color: "#ffffff" });
+        record.setOrigin(0.5);
+
+        // вычисление пропорций кнопок
+        const buttonSideSize = screenWidth * 0.13;
+
+        // если новый рекорд
+        this.newRecord = this.add.image(this.cameras.main.width * 3.7 / 5, screenHeight * 0.9 / 2, "new-record");
+        this.newRecord.setDisplaySize(screenWidth * 0.4, screenWidth * 0.4);
+        const glow = this.newRecord.preFX?.addShine()
+
+        this.restartBtn = this.add.image(screenWidth * 1.1 / 3, screenHeight * 3 / 4, "restart-btn");
+        this.restartBtn.setDisplaySize(buttonSideSize, buttonSideSize);
+        this.restartBtn.setInteractive({ useHandCursor: true });
+        this.restartBtn.on("pointerdown", () => {
+            this.scene.start("game");
+        });
+
+        this.mainManuBtn = this.add.image(screenWidth * 1.9 / 3, screenHeight * 3 / 4, "main-page-btn");
+        this.mainManuBtn.setDisplaySize(buttonSideSize, buttonSideSize);
+        this.mainManuBtn.setInteractive({ useHandCursor: true });
+        this.mainManuBtn.on("pointerdown", () => {
+            this.scene.start("menu");
+        });
+    }
+
+    update() {
+        
+    }
+}
