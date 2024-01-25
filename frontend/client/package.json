@@ -26,6 +26,7 @@
   "nodeversion": "14.18.1",
   "npmversion": "8.13.2",
   "dependencies": {
+    "phaser3-rex-plugins": "^1.60.9",
     "typescript-cubic-spline": "^1.0.1"
   }
 }

@@ -3,7 +3,7 @@ import { PreloadScene } from "../../client/src/scenes/PreloadScene";
 import { GameScene } from "./scenes/GameScene";
 import { MainMenuScene } from "./scenes/Main-menu-old";
 import { MenuScene } from "./scenes/MenuScene";
-import {GameOverScene} from "./scenes/GameOverScene";
+import { GameOverScene } from "./scenes/GameOverScene";
 
 const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
@@ -23,7 +23,7 @@ const config: Phaser.Types.Core.GameConfig = {
             }
         }
     },
-    scene: [PreloadScene, MenuScene, GameOverScene]
+    scene: [PreloadScene, MenuScene, GameOverScene],
 }
 
 const game: Phaser.Game = new Phaser.Game(config)

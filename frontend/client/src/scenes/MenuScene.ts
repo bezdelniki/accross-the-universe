@@ -1,7 +1,6 @@
-import { use } from "matter";
+// import { use } from "matter";
 import * as Phaser from "phaser";
 import { GameScene } from "./GameScene";
-
 
 export class MenuScene extends Phaser.Scene {
     private playButton!: Phaser.GameObjects.Image;
@@ -9,7 +8,7 @@ export class MenuScene extends Phaser.Scene {
     private userBox!: Phaser.GameObjects.Image;
     private leaderboardBox!: Phaser.GameObjects.Image;
 
-    private username!: string;
+    private username: string = "...";
     private money: number = 0;
     private distanceRecord: number = 0;
 
@@ -19,8 +18,15 @@ export class MenuScene extends Phaser.Scene {
 
     private leaderboardTitle!: Phaser.GameObjects.Text;
 
+    private scrollContainer!: Phaser.GameObjects.Container;
+
+    private leadersList!: Phaser.GameObjects.Text[];
+    private scrollMask!: Phaser.GameObjects.Graphics;
+
     constructor() {
         super("menu");
+
+        this.leadersList = [];
     }
 
     create() {
@@ -72,14 +78,14 @@ export class MenuScene extends Phaser.Scene {
 
         this.usernameText.setPosition(userBoxCenterX, userBoxTopTextY);
         this.usernameText.setOrigin(0.5, 0);
-        
+
         this.distanceRecordText.setPosition(userBoxCenterX, userBoxTopTextY + this.userBox.displayHeight * 0.2);
         this.distanceRecordText.setOrigin(0.5, 0);
-       
+
         this.moneyText.setPosition(userBoxCenterX, userBoxTopTextY + this.userBox.displayHeight * 0.4);
         this.moneyText.setOrigin(0.5, 0);
 
-        
+
         // штука для авторизации
 
         this.leaderboardTitle = this.add.text(0, 0, "LEADERBOARD ", { fontSize: "36px", fontFamily: "aidafont", color: "#ffffff" });
@@ -91,12 +97,38 @@ export class MenuScene extends Phaser.Scene {
         this.leaderboardTitle.setOrigin(0.5, 0);
         // this.leaderboardBox.displayWidth = this.leaderboardBox.displayWidth;
 
+        const scrollPosX = screenWidth - this.leaderboardBox.displayWidth * 0.875;
+        const scrollPosY = this.leaderboardBox.y - this.leaderboardBox.displayHeight * 0.419;
+        const scrollWidth = this.leaderboardBox.displayWidth * 0.64;
+        const scrollHeight = this.leaderboardBox.displayHeight * 0.805;
+
+        this.scrollContainer = this.add.container(scrollPosX, scrollPosY);
+        this.scrollContainer.setScrollFactor(0);
+
+        // фон области прокрутки
+        this.scrollMask = this.add.graphics();
+        // this.scrollMask.fillStyle(0x000000, 0.5);
+        this.scrollMask.fillRect(scrollPosX, scrollPosY, scrollWidth, scrollHeight);
+        this.scrollContainer.setMask(this.scrollMask.createGeometryMask());
+
+        this.leadersList = [];
+
+        const leadersCount = 15;
+        const itemHeight = scrollHeight / leadersCount;
+        for (let i = 0; i < leadersCount; i++) {
+            const listItem = this.add.text(0, i * itemHeight, '', { fontSize: "20px", fontFamily: "aidafont", color: "#ffffff" });
+            listItem.setVisible(false); // Установить видимость элемента списка в false
+            this.scrollContainer.add(listItem);
+            this.leadersList.push(listItem);
+  }
+
+        //
+
+
+        //
+
         this.updateData();
         this.updateDisplayedValues();
-    }
-
-    update() {
-
     }
 
     updateSize(screenWidth: number, screenHeight: number) {
@@ -121,15 +153,27 @@ export class MenuScene extends Phaser.Scene {
         const userBoxTopTextY = this.userBox.y - this.userBox.displayHeight * 0.25;
 
         this.usernameText.setPosition(userBoxCenterX, userBoxTopTextY);
-        
+
         this.distanceRecordText.setPosition(userBoxCenterX, userBoxTopTextY + this.userBox.displayHeight * 0.2);
-       
+
         this.moneyText.setPosition(userBoxCenterX, userBoxTopTextY + this.userBox.displayHeight * 0.4);
 
         const leaderboardBoxCenterX = screenWidth - this.leaderboardBox.displayWidth * 0.55;
         const leaderboardBoxTopY = this.leaderboardBox.y - this.leaderboardBox.displayHeight * 0.56;
 
         this.leaderboardTitle.setPosition(leaderboardBoxCenterX, leaderboardBoxTopY);
+
+        const scrollPosX = screenWidth - this.leaderboardBox.displayWidth * 0.875;
+        const scrollPosY = this.leaderboardBox.y - this.leaderboardBox.displayHeight * 0.419;
+        const scrollWidth = this.leaderboardBox.displayWidth * 0.64;
+        const scrollHeight = this.leaderboardBox.displayHeight * 0.805;
+
+        this.scrollContainer.setPosition(scrollPosX, scrollPosY);
+        this.scrollContainer.setScrollFactor(0);
+
+        this.scrollMask.clear();
+        this.scrollMask.fillRect(scrollPosX, scrollPosY, scrollWidth, scrollHeight);
+        this.scrollContainer.setMask(this.scrollMask.createGeometryMask());
     }
 
     updateDisplayedValues(): void {
@@ -152,9 +196,6 @@ export class MenuScene extends Phaser.Scene {
         //      username
         //      money
         //      distanceRecord
-        this.username = "some-user";
-        this.distanceRecord = 12345;
-        this.money = 1234567;
     }
 
     updateLeaderboard(): void {
@@ -179,6 +220,22 @@ export class MenuScene extends Phaser.Scene {
             ['MusicLover', 200],
             ['CodeNinja', 123],
             ['FitnessEnthusiast', 34]
-          ];
+        ];
+
+        this.setLeaderboardData(exampleData);
+    }
+
+    setLeaderboardData(data: (string | number)[][]): void {
+        const maxCount = this.leadersList.length;
+
+        for (let i = 0; i < maxCount; i++) {
+            if (i < data.length) {
+                this.leadersList[i].setText(`${i + 1}) ${data[i][0]} - ${data[i][1]}`);
+                this.leadersList[i].setVisible(true);
+            } else {
+                this.leadersList[i].setVisible(false);
+            }
+        }
     }
 }
+
