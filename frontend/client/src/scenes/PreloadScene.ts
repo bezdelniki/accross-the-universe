@@ -18,8 +18,8 @@ export class PreloadScene extends Phaser.Scene {
 
         this.load.image('play-btn', 'assets/images/menu/play-btn.svg')
         this.load.image('background', 'assets/images/menu/background.jpg')
-
-        // this.load.font('dumbprofont', 'assets/fonts/3DumbPro03.ttf');
+        this.load.image('user-frame', 'assets/images/menu/frame1.svg')
+        this.load.image('leaderboard-frame', 'assets/images/menu/frame2.svg')
     }
 
     create() {

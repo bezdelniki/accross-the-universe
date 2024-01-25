@@ -1,8 +1,11 @@
+import { use } from "matter";
 import * as Phaser from "phaser";
 
 export class MenuScene extends Phaser.Scene {
     private playButton!: Phaser.GameObjects.Image;
     private background!: Phaser.GameObjects.Image;
+    private userBox!: Phaser.GameObjects.Image;
+    private leaderboardBox!: Phaser.GameObjects.Image;
 
     constructor() {
         super("menu");
@@ -21,7 +24,7 @@ export class MenuScene extends Phaser.Scene {
         this.background.setDisplaySize(screenWidth, screenHeight);
 
         // Создание заголовка
-        const title = this.add.text(this.cameras.main.width / 2, 100, "Accross The Universe", { fontSize: "64px", fontFamily: "dumbprofont", color: "#ffffff" });
+        const title = this.add.text(screenWidth / 2, screenHeight * 0.15, "Accross The Universe", { fontSize: "64px", fontFamily: "dumbprofont", color: "#ffffff" });
         title.setOrigin(0.5);
 
         // Вычисление размеров кнопки в процентах от размера экрана
@@ -35,6 +38,25 @@ export class MenuScene extends Phaser.Scene {
         this.playButton.on("pointerdown", () => {
             this.scene.start("game");
         });
+
+        // leaderboardBox
+        this.leaderboardBox = this.add.image(screenWidth * 0.02, this.cameras.main.centerY, 'leaderboard-frame');
+        this.leaderboardBox.setOrigin(0, 0.5);
+
+        const leaderboardBoxHeight = screenHeight * 0.7;
+        const leaderboardBoxWidth = leaderboardBoxHeight / 1.4;
+        this.leaderboardBox.setDisplaySize(leaderboardBoxWidth, leaderboardBoxHeight);
+        this.leaderboardBox.setPosition(screenWidth - leaderboardBoxWidth, this.cameras.main.centerY * 1.2);
+
+        // userBox
+        const userBoxHeight = screenHeight * 0.5;
+        const userBoxWidth = userBoxHeight ;
+
+        this.userBox = this.add.image(0, this.cameras.main.centerY, 'user-frame');
+        this.userBox.setOrigin(0, 0.5);
+
+        this.userBox.setDisplaySize(userBoxWidth, userBoxHeight);
+
 
         // // Создание кнопки Play
         // const playButton = this.add.text(this.cameras.main.width / 2, 200, "Play", { fontSize: "24px", fontFamily: "Arial", color: "#ffffff", backgroundColor: "#000000" });

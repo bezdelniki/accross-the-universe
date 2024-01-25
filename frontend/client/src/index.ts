@@ -6,8 +6,8 @@ import { MenuScene } from "./scenes/MenuScene";
 
 const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
-    width: 1024,
-    height: 720,
+    width: '100%',
+    height: '100%',
     backgroundColor: "#555555",
     physics: {
         default: 'matter',
