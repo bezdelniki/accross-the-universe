@@ -1,6 +1,11 @@
 import * as Phaser from "phaser";
 import Spline from 'typescript-cubic-spline';
 
+interface GameData {
+    distanceRecord: number;
+    money: number;
+}
+
 function randomInt(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
@@ -39,6 +44,7 @@ export class GameScene extends Phaser.Scene {
 
     private fuel: number = this.maxFuel
     private distanceRecord: number = 0
+    private distanceRecordGlobal: number = 0;
     private distance: number = 0
     private moneyCounter: number = 0
 
@@ -48,6 +54,8 @@ export class GameScene extends Phaser.Scene {
     private distanceIndicator!: Phaser.GameObjects.Text
     private moneyIndicator!: Phaser.GameObjects.Text
     private fuelIndicator!: Phaser.GameObjects.Sprite
+
+    private fuelBg!: Phaser.GameObjects.Sprite
 
     private moneyIcon!: Phaser.GameObjects.Image
 
@@ -61,7 +69,10 @@ export class GameScene extends Phaser.Scene {
 
     // private esc!: any
 
-    init() {
+    init(data: GameData) {
+        this.distanceRecordGlobal = data.distanceRecord;
+        this.moneyCounter = data.money;
+
         this.cursors = this.input.keyboard?.createCursorKeys() as Phaser.Types.Input.Keyboard.CursorKeys
     }
 
@@ -70,7 +81,6 @@ export class GameScene extends Phaser.Scene {
     }
 
     create(): void {
-        // this.scene.restart();
         // this.esc = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.ESC)
 
         this.width = this.scale.width
@@ -280,10 +290,10 @@ export class GameScene extends Phaser.Scene {
         this.distanceIndicator = this.add.text(10, 10, "", { fontFamily: "Arial", fontSize: 28, color: "#ffffff" })
 
         this.fuel = 1
-        this.fuelIndicator = this.add.sprite(10, 45, "fuelBar")
+        this.fuelIndicator = this.add.sprite(10, 45, "fuel-lvl")
+        this.fuelBg = this.add.sprite(10, 45, "fuel-bg")
         this.fuelIndicator.setOrigin(0, 0)
 
-        this.moneyCounter = 0 // надо потом сюда записать начальное значение
         this.moneyIndicator = this.add.text(10, 90, "", { fontFamily: "Arial", fontSize: 28, color: "#ffffff" })
         this.moneyIcon = this.matter.add.sprite(60, 90, 'coin500', undefined, { isStatic: true })
         this.moneyIcon.setDisplaySize(40, 40)
@@ -328,7 +338,6 @@ export class GameScene extends Phaser.Scene {
 
         if (this.fuel < 0) {
             this.fuel = 0
-            // console.log("no fuel")
         }
 
         this.characterHead.setRotation(Math.PI / 2 + this.car.rotation - Math.PI / 12)
@@ -339,7 +348,6 @@ export class GameScene extends Phaser.Scene {
     updateGameState(): void {
         if ((this.characterDead || this.fuel === 0) && !this.gameEnd) {
             this.gameEnd = true
-            console.log("game end.")
             this.gameOver();
         }
     }
@@ -422,7 +430,6 @@ export class GameScene extends Phaser.Scene {
     generateSurface(): void {
         if (this.generatedDistance < this.car.x + this.width) {
             const xStart: number = this.generatedDistance
-            // console.log(xStart)
             const xStep: number = 300
             const pointNumber: number = 10
             const yMin = - 10 - 10 * (this.generatedDistance / 3000) // 5000
@@ -557,7 +564,9 @@ export class GameScene extends Phaser.Scene {
 
                     switch (baseType) {
                         case "fuel":
-                            this.fuel = 1
+                            if (!this.gameEnd) {
+                                this.fuel = 1;
+                            }
                             break
                         case "coin":
                             const coinValue = Number(type.slice(4, type.length))
@@ -622,7 +631,7 @@ export class GameScene extends Phaser.Scene {
         const distanceRecord = this.distanceRecord;
         const money = this.moneyCounter;
         
-        this.scene.start('game-over', { characterDead: characterDead, distance: distance, distanceRecord: distanceRecord, money: money });
+        this.scene.start('game-over', { characterDead: characterDead, distance: distance, distanceRecord: this.distanceRecordGlobal, money: money });
         this.scene.remove('game');
     }
 }

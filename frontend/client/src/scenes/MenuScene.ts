@@ -2,6 +2,12 @@
 import * as Phaser from "phaser";
 import { GameScene } from "./GameScene";
 
+interface MenuData {
+    distanceRecord: number;
+    money: number;
+}
+
+
 export class MenuScene extends Phaser.Scene {
     private playButton!: Phaser.GameObjects.Image;
     private background!: Phaser.GameObjects.Image;
@@ -23,6 +29,28 @@ export class MenuScene extends Phaser.Scene {
     private leadersList!: Phaser.GameObjects.Text[];
     private scrollMask!: Phaser.GameObjects.Graphics;
 
+    private loginForm!: Phaser.GameObjects.DOMElement;
+    private loginFormOpened: boolean = false;
+
+    private openFormBtn!: Phaser.GameObjects.Image;
+
+    private authorized: boolean = false;
+
+    preload() {
+        this.load.html("form", "form.html");
+    }
+
+    init(data: MenuData) {
+        if (!this.authorized) {
+            if (data.money) {
+                this.money = data.money;
+            }
+            if (data.distanceRecord) {
+                this.distanceRecord = data.distanceRecord;
+            }
+        }
+    }
+
     constructor() {
         super("menu");
 
@@ -30,7 +58,6 @@ export class MenuScene extends Phaser.Scene {
     }
 
     create() {
-        console.log("create menu scene");
         const screenWidth = this.cameras.main.width;
         const screenHeight = this.cameras.main.height;
 
@@ -49,7 +76,7 @@ export class MenuScene extends Phaser.Scene {
         this.playButton.setDisplaySize(buttonWidth, buttonHeight);
         this.playButton.setInteractive({ useHandCursor: true });
         this.playButton.on("pointerdown", () => {
-            this.scene.add('game', GameScene, true);
+            this.scene.add('game', GameScene, true, { money: this.money, distanceRecord: this.distanceRecord });
             this.scene.setVisible(false, 'menu');
         });
 
@@ -88,6 +115,25 @@ export class MenuScene extends Phaser.Scene {
 
         // штука для авторизации
 
+        this.openFormBtn = this.add.image(0, 0, "login-btn");
+        this.openFormBtn.setDisplaySize(screenWidth * 0.05, screenWidth * 0.05);
+        this.openFormBtn.setPosition(userBoxCenterX, userBoxTopTextY);
+        this.openFormBtn.setOrigin(0.5, 0);
+        this.openFormBtn.setInteractive({ useHandCursor: true });
+        this.openFormBtn.on("pointerdown", () => {
+            if (!this.loginFormOpened) {
+                this.openLoginForm();
+            } else {
+                this.closeLoginForm();
+            }
+        });
+        if (this.authorized) {
+            this.openFormBtn.setVisible(false);
+            this.openFormBtn.disableInteractive();
+        }
+
+        //
+
         this.leaderboardTitle = this.add.text(0, 0, "LEADERBOARD ", { fontSize: "36px", fontFamily: "aidafont", color: "#ffffff" });
 
         const leaderboardBoxCenterX = screenWidth - this.leaderboardBox.displayWidth * 0.55;
@@ -120,12 +166,7 @@ export class MenuScene extends Phaser.Scene {
             listItem.setVisible(false); // Установить видимость элемента списка в false
             this.scrollContainer.add(listItem);
             this.leadersList.push(listItem);
-  }
-
-        //
-
-
-        //
+        }
 
         this.updateData();
         this.updateDisplayedValues();
@@ -174,13 +215,22 @@ export class MenuScene extends Phaser.Scene {
         this.scrollMask.clear();
         this.scrollMask.fillRect(scrollPosX, scrollPosY, scrollWidth, scrollHeight);
         this.scrollContainer.setMask(this.scrollMask.createGeometryMask());
+
+        const leadersCount = 15;
+        const itemHeight = scrollHeight / leadersCount;
+        for (let i = 0; i < leadersCount; i++) {
+            this.leadersList[i].setPosition(0, i * itemHeight);
+        }
+
+        if (this.loginForm) {
+            this.loginForm.setPosition(screenWidth * 0.5 - this.loginForm.displayWidth * 0.5, screenHeight * 0.5 - this.loginForm.displayHeight * 0.5);
+        }
     }
 
     updateDisplayedValues(): void {
         this.usernameText.setText(`${this.username}`);
         this.distanceRecordText.setText(`${this.distanceRecord}m`)
         this.moneyText.setText(`${this.money}g`);
-
     }
 
     updateData(): void {
@@ -236,6 +286,43 @@ export class MenuScene extends Phaser.Scene {
                 this.leadersList[i].setVisible(false);
             }
         }
+    }
+
+    openLoginForm() {
+        this.loginFormOpened = true;
+        const screenWidth = this.cameras.main.width;
+        const screenHeight = this.cameras.main.height;
+
+        if (!this.loginForm) {
+            this.loginForm = this.add.dom(screenWidth * 0.5, screenHeight * 0.5).createFromCache("form");
+            this.loginForm.setPosition(screenWidth * 0.5 - this.loginForm.displayWidth * 0.5, screenHeight * 0.5 - this.loginForm.displayHeight * 0.5);
+
+            const submitButton = this.loginForm.node.querySelector('[name="submit"]');
+            if (submitButton) {
+                submitButton.addEventListener('pointerdown', this.handleFormSubmit.bind(this));
+
+            }
+        } else {
+            this.loginForm.setVisible(true);
+        }
+        this.playButton.disableInteractive();
+
+    }
+
+    closeLoginForm() {
+        this.loginFormOpened = false;
+        this.loginForm.setVisible(false);
+        this.playButton.setInteractive({ useHandCursor: true });
+    }
+
+    handleFormSubmit() {
+        const input = this.loginForm.node.querySelectorAll('input');
+        const loginValue = input[0].value;
+        const passwordValue = input[1].value;
+        
+        // Делайте что-то с введенными данными авторизации
+        console.log('Login:', loginValue);
+        console.log('Password:', passwordValue);
     }
 }
 

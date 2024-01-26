@@ -15,6 +15,8 @@ export class PreloadScene extends Phaser.Scene {
         this.load.image('fuel', 'assets/images/items/fuel.png')
         this.load.image('driverBody', 'assets/images/driver/body.png')
         this.load.image('driverHead', 'assets/images/driver/head.png')
+        this.load.image('fuel-bg', 'assets/images/items/fuelBg.svg')
+        this.load.image('fuel-lvl', 'assets/images/items/fuelLevel.svg')
 
         this.load.json('shapes', 'assets/JSONs/shapes.json')
 
@@ -22,6 +24,7 @@ export class PreloadScene extends Phaser.Scene {
         this.load.image('background', 'assets/images/menu/background.jpg')
         this.load.image('user-frame', 'assets/images/menu/frame1.svg')
         this.load.image('leaderboard-frame', 'assets/images/menu/frame2.svg')
+        this.load.image('login-btn', 'assets/images/menu/loginBtn.svg')
 
         this.load.image('restart-btn', 'assets/images/menu/restart.png')
         this.load.image('main-page-btn', 'assets/images/menu/main-page.png')

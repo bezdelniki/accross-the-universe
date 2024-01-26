@@ -42,6 +42,8 @@ export class GameOverScene extends Phaser.Scene {
         if (this.distance > this.distanceRecord) {
             this.distanceRecord = this.distance;
             this.isRecord = true;
+        } else {
+            this.isRecord = false;
         }
     }
 
@@ -71,17 +73,19 @@ export class GameOverScene extends Phaser.Scene {
 
         const buttonSideSize = screenWidth * 0.13;
 
-        if (this.isRecord) {
-            this.newRecord = this.add.image(screenWidth * 3.7 / 5, screenHeight * 0.9 / 2, "new-record");
-            this.newRecord.setDisplaySize(screenWidth * 0.4, screenWidth * 0.4);
-            const glow = this.newRecord.preFX?.addShine()
+        this.newRecord = this.add.image(screenWidth * 3.7 / 5, screenHeight * 0.9 / 2, "new-record");
+        this.newRecord.setDisplaySize(screenWidth * 0.4, screenWidth * 0.4);
+        const glow = this.newRecord.preFX?.addShine()
+
+        if (!this.isRecord) {
+            this.newRecord.setVisible(false);
         }
 
         this.restartBtn = this.add.image(screenWidth * 1.1 / 3, screenHeight * 3 / 4, "restart-btn");
         this.restartBtn.setDisplaySize(buttonSideSize, buttonSideSize);
         this.restartBtn.setInteractive({ useHandCursor: true });
         this.restartBtn.on("pointerdown", () => {
-            this.scene.add('game', GameScene, true);
+            this.scene.add('game', GameScene, true, { money: this.money, distanceRecord: this.distanceRecord});
             this.scene.setVisible(false, 'game-over');
         });
         
@@ -89,7 +93,7 @@ export class GameOverScene extends Phaser.Scene {
         this.mainManuBtn.setDisplaySize(buttonSideSize, buttonSideSize);
         this.mainManuBtn.setInteractive({ useHandCursor: true });
         this.mainManuBtn.on("pointerdown", () => {
-            this.scene.start('menu');
+            this.scene.start('menu', { money: this.money, distanceRecord: this.distanceRecord });
             this.scene.setVisible(false, 'game-over');
         });
     }
