@@ -1,7 +1,6 @@
 import * as Phaser from "phaser";
 import { PreloadScene } from "../../client/src/scenes/PreloadScene";
 import { GameScene } from "./scenes/GameScene";
-import { MainMenuScene } from "./scenes/Main-menu-old";
 import { MenuScene } from "./scenes/MenuScene";
 import { GameOverScene } from "./scenes/GameOverScene";
 
