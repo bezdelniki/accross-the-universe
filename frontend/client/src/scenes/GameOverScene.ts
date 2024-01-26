@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 import { GameScene } from "./GameScene";
+import createClient from "../Tools";
 
 
 interface GameOverData {
@@ -85,6 +86,7 @@ export class GameOverScene extends Phaser.Scene {
         this.restartBtn.setDisplaySize(buttonSideSize, buttonSideSize);
         this.restartBtn.setInteractive({ useHandCursor: true });
         this.restartBtn.on("pointerdown", () => {
+            this.sendData();
             this.scene.add('game', GameScene, true, { money: this.money, distanceRecord: this.distanceRecord});
             this.scene.setVisible(false, 'game-over');
         });
@@ -93,6 +95,7 @@ export class GameOverScene extends Phaser.Scene {
         this.mainManuBtn.setDisplaySize(buttonSideSize, buttonSideSize);
         this.mainManuBtn.setInteractive({ useHandCursor: true });
         this.mainManuBtn.on("pointerdown", () => {
+            this.sendData();
             this.scene.start('menu', { money: this.money, distanceRecord: this.distanceRecord });
             this.scene.setVisible(false, 'game-over');
         });
@@ -129,10 +132,20 @@ export class GameOverScene extends Phaser.Scene {
         this.goldText.setText(`Gold: ${this.money}g`);
     }
 
-    sendData(): void {
+    sendData() {
         const money = this.money;
         const distanceRecord = this.distanceRecord;
 
-        // data post
+        // const client = createClient();
+        // const token = sessionStorage.getItem('token');
+
+        // const formData = {
+        //     token: token,
+        //     score: distanceRecord,
+        // };
+
+        // if (token) {
+        //     client.post('/leaderboard/', formData)
+        // }
     }
 }

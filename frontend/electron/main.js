@@ -7,7 +7,7 @@ require("@electron/remote/main").initialize();
 process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
 
 // const isDevelopment = process.env.NODE_ENV !== 'production';
-const isDevelopment = true
+const isDevelopment = false
 
 
 const createWindow = () => {
@@ -18,6 +18,7 @@ const createWindow = () => {
     webPreferences: {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
+      webSecurity: false,
       enableRemoteModule: true,
       preload: path.join(__dirname, "preload.js"),
     },

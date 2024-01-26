@@ -1,6 +1,7 @@
 // import { use } from "matter";
 import * as Phaser from "phaser";
 import { GameScene } from "./GameScene";
+import createClient from "../Tools";
 
 interface MenuData {
     distanceRecord: number;
@@ -116,7 +117,7 @@ export class MenuScene extends Phaser.Scene {
         // штука для авторизации
 
         this.openFormBtn = this.add.image(0, 0, "login-btn");
-        this.openFormBtn.setDisplaySize(screenWidth * 0.05, screenWidth * 0.05);
+        this.openFormBtn.setDisplaySize(screenWidth * 0.03, screenWidth * 0.03);
         this.openFormBtn.setPosition(userBoxCenterX, userBoxTopTextY);
         this.openFormBtn.setOrigin(0.5, 0);
         this.openFormBtn.setInteractive({ useHandCursor: true });
@@ -249,6 +250,17 @@ export class MenuScene extends Phaser.Scene {
     }
 
     updateLeaderboard(): void {
+        // const client = createClient();
+
+        // const formData = {
+
+        // };
+
+        // client.post('/api/v1/token/login/', formData)
+        //     .then(response => {
+                
+        //     })
+
         const exampleData = [
             ['CoffeeAddict', 99432],
             ['CoolGamer', 98765],
@@ -271,7 +283,7 @@ export class MenuScene extends Phaser.Scene {
             ['CodeNinja', 123],
             ['FitnessEnthusiast', 34]
         ];
-
+    
         this.setLeaderboardData(exampleData);
     }
 
@@ -315,14 +327,43 @@ export class MenuScene extends Phaser.Scene {
         this.playButton.setInteractive({ useHandCursor: true });
     }
 
-    handleFormSubmit() {
+    async handleFormSubmit() {
         const input = this.loginForm.node.querySelectorAll('input');
         const loginValue = input[0].value;
         const passwordValue = input[1].value;
+        const isLogin = input[2].value;
         
         // Делайте что-то с введенными данными авторизации
         console.log('Login:', loginValue);
         console.log('Password:', passwordValue);
+
+        // const client = createClient();
+
+        // const formData = {
+        //     username: loginValue,
+        //     password: passwordValue,
+        // };
+
+        // if (isLogin) {
+        //     const response = await client.post('/api/v1/token/login/', formData)
+        //     .then(response => {
+        //         const token = response.data.token;
+        //         sessionStorage.setItem('token', token);
+                
+        //         console.log(`current user token: ${token}`);
+        //         this.authorized = true;
+        //         this.openFormBtn.setVisible(false);
+        //         this.openFormBtn.disableInteractive();
+        //     })
+        // } else {
+        //     const response = await client.post('/api/v1/users/', formData)
+        //     .then(response => {
+        //         const token = response.data.token;
+        //         sessionStorage.setItem('token', token);
+                
+        //         console.log(`current user token: ${token}`);
+        //     })
+        // }
     }
 }
 

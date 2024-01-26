@@ -17,7 +17,7 @@ const config: Phaser.Types.Core.GameConfig = {
     physics: {
         default: 'matter',
         matter: {
-            debug: true,
+            debug: false,
             gravity: { y: 3 },
             setBounds: {
                 left: false,
@@ -38,16 +38,6 @@ function resizeGame(): void {
     var windowWidth = window.innerWidth;
     var windowHeight = window.innerHeight;
     var gameWidth, gameHeight;
-
-    // if (windowWidth > windowHeight) {
-    //     // Режим горизонтального экрана
-    //     gameWidth = windowHeight * ((game.config.width as number) / (game.config.height as number));
-    //     gameHeight = windowHeight;
-    // } else {
-    //     // Режим вертикального экрана
-    //     gameWidth = windowWidth;
-    //     gameHeight = windowWidth * ((game.config.height as number) / (game.config.width as number));
-    // }
 
     gameWidth = windowWidth;
     gameHeight = windowHeight;
