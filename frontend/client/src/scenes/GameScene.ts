@@ -14,6 +14,9 @@ function max(a: number, b: number): number {
     return a >= b ? a : b
 }
 
+const FUEL_WIDTH = 200;
+const FUEL_HEIGHT = 40;
+
 export class GameScene extends Phaser.Scene {
 
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
@@ -290,9 +293,12 @@ export class GameScene extends Phaser.Scene {
         this.distanceIndicator = this.add.text(10, 10, "", { fontFamily: "Arial", fontSize: 28, color: "#ffffff" })
 
         this.fuel = 1
-        this.fuelIndicator = this.add.sprite(10, 45, "fuel-lvl")
         this.fuelBg = this.add.sprite(10, 45, "fuel-bg")
+        this.fuelIndicator = this.add.sprite(14, 47, "fuel-lvl")
+        this.fuelIndicator.setDisplaySize(FUEL_WIDTH - 4, FUEL_HEIGHT - 4);
+        this.fuelBg.setDisplaySize(FUEL_WIDTH, FUEL_HEIGHT)
         this.fuelIndicator.setOrigin(0, 0)
+        this.fuelBg.setOrigin(0, 0);
 
         this.moneyIndicator = this.add.text(10, 90, "", { fontFamily: "Arial", fontSize: 28, color: "#ffffff" })
         this.moneyIcon = this.matter.add.sprite(60, 90, 'coin500', undefined, { isStatic: true })
@@ -332,7 +338,7 @@ export class GameScene extends Phaser.Scene {
 
         this.updateBackWallPosition()
 
-        this.fuelIndicator.setDisplaySize(this.fuel * this.fuelIndicator.width, this.fuelIndicator.height)
+        this.fuelIndicator.setDisplaySize(this.fuel * (FUEL_WIDTH - 4), FUEL_HEIGHT - 4)
 
         this.fuel -= this.fuelDecreaseRate * (dt / 1000)
 
@@ -368,6 +374,7 @@ export class GameScene extends Phaser.Scene {
     updateIndicatorsPositions(): void {
         this.distanceIndicator.setScrollFactor(0, 0)
         this.fuelIndicator.setScrollFactor(0, 0)
+        this.fuelBg.setScrollFactor(0, 0)
         this.moneyIndicator.setScrollFactor(0, 0)
 
         this.moneyIcon.setScrollFactor(0, 0)
