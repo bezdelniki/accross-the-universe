@@ -94,12 +94,11 @@ export class GameScene extends Phaser.Scene {
         const backWallWidth = 20
         this.backWall = this.matter.add.sprite(0, 0, 'backWall')
         this.backWall.setDisplaySize(backWallWidth, this.width)
-        this.backWall.setVisible(false);
         this.matter.body.setStatic(this.backWall.body as MatterJS.BodyType, true)
         this.matter.body.setInertia(this.backWall.body as MatterJS.BodyType, Infinity)
 
         this.startPosX = 300
-        this.startPosY = 500
+        this.startPosY = 300
 
         this.characterHead = this.matter.add.sprite(0, 0, 'driverHead', undefined, { shape: this.shapes.driverHead })
         this.characterBody = this.matter.add.sprite(0, 100, 'driverBody', undefined, { shape: this.shapes.driverBody })

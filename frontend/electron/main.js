@@ -7,7 +7,7 @@ require("@electron/remote/main").initialize();
 process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
 
 // const isDevelopment = process.env.NODE_ENV !== 'production';
-const isDevelopment = false
+const isDevelopment = true
 
 
 const createWindow = () => {
@@ -16,6 +16,7 @@ const createWindow = () => {
     width: 1080,
     height: 720,
     webPreferences: {
+      devTools: false,
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
       webSecurity: false,
@@ -24,7 +25,7 @@ const createWindow = () => {
     },
   });
 
-  mainWindow.setMenuBarVisibility(isDevelopment);
+  mainWindow.setMenuBarVisibility(false);
 
   // and load the index.html of the app.
   // mainWindow.loadFile(__dirname, "./app/index.html")
@@ -32,7 +33,7 @@ const createWindow = () => {
   else mainWindow.loadURL('http://localhost:3000');
 
   // Open the DevTools.
-  if (isDevelopment) mainWindow.webContents.openDevTools()
+  //if (isDevelopment) mainWindow.webContents.openDevTools()
 };
 
 // This method will be called when Electron has finished

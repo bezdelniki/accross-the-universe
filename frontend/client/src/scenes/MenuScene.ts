@@ -1,30 +1,11 @@
 // import { use } from "matter";
 import * as Phaser from "phaser";
 import { GameScene } from "./GameScene";
-import createClient from "../Tools";
 
 interface MenuData {
     distanceRecord: number;
     money: number;
 }
-
-const exampleData: [string, number, number][] = [
-    ['CoffeeAddict', 99432, 5283],
-    ['CoolGamer', 98765, 5100],
-    ['Bookworm', 90123, 5092],
-    ['Traveler', 82933, 5001],
-    ['User123', 54321, 4837],
-    ['SportsFan', 43428, 3934],
-    ['NatureLover', 6789, 3473],
-    ['TechWizard', 6247, 3284],
-    ['RhythmJunkie', 2348, 2984],
-    ['sush', 1000, 2743],
-    ['MusicLover', 200, 2587],
-    ['CodeNinja', 123, 2096],
-    ['FitnessEnthusiast', 34, 1300],
-    ['Kitten', 20, 804],
-    ['CATS', 10, 21],
-];
 
 
 export class MenuScene extends Phaser.Scene {
@@ -60,19 +41,13 @@ export class MenuScene extends Phaser.Scene {
     }
 
     init(data: MenuData) {
-        // if (!this.authorized) {
-        //     if (data.money) {
-        //         this.money = data.money;
-        //     }
-        //     if (data.distanceRecord) {
-        //         this.distanceRecord = data.distanceRecord;
-        //     }
-        // }
-        if (data.money) {
-            this.money = data.money;
-        }
-        if (data.distanceRecord) {
-            this.distanceRecord = data.distanceRecord;
+        if (!this.authorized) {
+            if (data.money) {
+                this.money = data.money;
+            }
+            if (data.distanceRecord) {
+                this.distanceRecord = data.distanceRecord;
+            }
         }
     }
 
@@ -141,7 +116,7 @@ export class MenuScene extends Phaser.Scene {
         // штука для авторизации
 
         this.openFormBtn = this.add.image(0, 0, "login-btn");
-        this.openFormBtn.setDisplaySize(screenWidth * 0.03, screenWidth * 0.03);
+        this.openFormBtn.setDisplaySize(screenWidth * 0.05, screenWidth * 0.05);
         this.openFormBtn.setPosition(userBoxCenterX, userBoxTopTextY);
         this.openFormBtn.setOrigin(0.5, 0);
         this.openFormBtn.setInteractive({ useHandCursor: true });
@@ -155,8 +130,6 @@ export class MenuScene extends Phaser.Scene {
         if (this.authorized) {
             this.openFormBtn.setVisible(false);
             this.openFormBtn.disableInteractive();
-        } else {
-            this.usernameText.setVisible(false);
         }
 
         //
@@ -276,36 +249,29 @@ export class MenuScene extends Phaser.Scene {
     }
 
     updateLeaderboard(): void {
-        // const client = createClient();
+        const exampleData = [
+            ['CoffeeAddict', 99432],
+            ['CoolGamer', 98765],
+            ['Bookworm', 90123],
+            ['Traveler', 82933],
+            ['User123', 54321],
+            ['SportsFan', 43428],
+            ['AnimalLover', 23478],
+            ['Dreamer', 23456],
+            ['MovieBuff', 23442],
+            ['NinjaMaster', 12345],
+            ['ArtisticSoul', 9876],
+            ['AdventureSeeker', 7890],
+            ['TechGeek', 7354],
+            ['NatureLover', 6789],
+            ['TechWizard', 6247],
+            ['RhythmJunkie', 2348],
+            ['Foodie', 1000],
+            ['MusicLover', 200],
+            ['CodeNinja', 123],
+            ['FitnessEnthusiast', 34]
+        ];
 
-        // const formData = {
-
-        // };
-
-        // client.post('/api/v1/token/login/', formData)
-        //     .then(response => {
-                
-        //     })
-
-        if (this.username) {
-            let found = false;
-
-            for (let i = 0; i < exampleData.length; i++) {
-                if (exampleData[i][0] === this.username) {
-                    exampleData[i][1] = this.money;
-                    exampleData[i][2] = this.distanceRecord;
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found) {
-                exampleData.push([this.username, this.money, this.distanceRecord]);
-            }
-
-            exampleData.sort((a, b) => b[1] - a[1]);
-        }
-    
         this.setLeaderboardData(exampleData);
     }
 
@@ -349,57 +315,13 @@ export class MenuScene extends Phaser.Scene {
         this.playButton.setInteractive({ useHandCursor: true });
     }
 
-    async handleFormSubmit() {
+    handleFormSubmit() {
         const input = this.loginForm.node.querySelectorAll('input');
-        const loginValue = input[1].value;
-        const passwordValue = input[2].value;
-        const isLogin = input[0].checked;
-
-        if (loginValue != "" && passwordValue != "") {
-            this.username = loginValue;
-            this.authorized = true;
-            this.closeLoginForm();
-            this.openFormBtn.setVisible(false);
-            this.openFormBtn.disableInteractive();
-            this.usernameText.setVisible(true);
-            
-            for (let i = 0; i < exampleData.length; i++) {
-                if (this.username === exampleData[i][0]) {
-                    this.money = exampleData[i][1];
-                    this.distanceRecord = exampleData[i][2];
-                }
-            }
-
-            this.updateDisplayedValues();
-        }
-
-        // const client = createClient();
-
-        // const formData = {
-        //     username: loginValue,
-        //     password: passwordValue,
-        // };
-
-        // if (isLogin) {
-        //     const response = await client.post('/api/v1/token/login/', formData)
-        //     .then(response => {
-        //         const token = response.data.token;
-        //         sessionStorage.setItem('token', token);
-                
-        //         console.log(`current user token: ${token}`);
-        //         this.authorized = true;
-        //         this.openFormBtn.setVisible(false);
-        //         this.openFormBtn.disableInteractive();
-        //     })
-        // } else {
-        //     const response = await client.post('/api/v1/users/', formData)
-        //     .then(response => {
-        //         const token = response.data.token;
-        //         sessionStorage.setItem('token', token);
-                
-        //         console.log(`current user token: ${token}`);
-        //     })
-        // }
+        const loginValue = input[0].value;
+        const passwordValue = input[1].value;
+        
+        // Делайте что-то с введенными данными авторизации
+        console.log('Login:', loginValue);
+        console.log('Password:', passwordValue);
     }
 }
-
